@@ -1,19 +1,19 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import React from 'react';
+import {View, StyleSheet, StatusBar} from 'react-native';
 import {Tab} from './components';
+import {colors} from './utils';
 
 const App = () => {
-  useEffect(() => {
-    return () => {};
-  }, []);
-
   return (
-    <View>
+    <View style={styles.container}>
+      <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
       <Tab />
     </View>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {flex: 1, backgroundColor: colors.white},
+});
 
 export default App;

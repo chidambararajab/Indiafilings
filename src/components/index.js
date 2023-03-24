@@ -1,3 +1,3 @@
 import Tab from './Tab';
-
-export {Tab};
+import ContactList from './ContactList';
+export {Tab, ContactList};
