@@ -16,21 +16,25 @@ const ContactList = ({
   isLoading,
   loadMoreItem,
 }) => {
-  const selectHandlr = item => {
-    clickHandler({
-      ...item,
-      isSelected:
-        item?.isSelected === true || item?.isSelected === false
-          ? !item?.isSelected
-          : true,
-    });
+  const selectHandler = item => {
+    if (item?.isDeleted) {
+      alert('Item already Deleted');
+    } else {
+      clickHandler({
+        ...item,
+        isSelected:
+          item?.isSelected === true || item?.isSelected === false
+            ? !item?.isSelected
+            : true,
+      });
+    }
   };
 
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={() => selectHandlr(item)}
+        onPress={() => selectHandler(item)}
         style={[
           styles.item,
           {borderLeftWidth: item?.isSelected === true ? 10 : 0},
@@ -45,7 +49,9 @@ const ContactList = ({
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.delete}
-            onPress={() => clickHandler({...item, isDeleted: true})}>
+            onPress={() =>
+              clickHandler({...item, isDeleted: true, isSelected: false})
+            }>
             <Text style={styles.itemText}>Delete</Text>
           </TouchableOpacity>
         )}
