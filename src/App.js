@@ -1,14 +1,18 @@
-import React from 'react';
-import {View, StyleSheet, StatusBar} from 'react-native';
+import React, {useEffect} from 'react';
+import {StyleSheet, StatusBar, LogBox, SafeAreaView} from 'react-native';
 import {Tab} from './components';
 import {colors} from './utils';
 
 const App = () => {
+  useEffect(() => {
+    LogBox.ignoreAllLogs();
+  }, []);
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
       <Tab />
-    </View>
+    </SafeAreaView>
   );
 };
 
