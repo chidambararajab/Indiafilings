@@ -17,13 +17,13 @@ export default configAxios = () => {
     err => {
       return new Promise((resolve, reject) => {
         if (err.response && err.response.status === 403) {
-          console.log(`${err.response.status}`);
+          alert(`Error with status code - ${err.response.status}`);
           return false;
         } else if (err.response && err.response.status === 404) {
-          console.log(`${err.response.status}`);
+          alert(`Error with status code - ${err.response.status}`);
           return false;
         } else if (err.response && err.response.status === 401) {
-          console.log(`${err.response.status}`);
+          alert(`Error with status code - ${err.response.status}`);
           return false;
         } else if (
           (typeof err === 'object' || typeof err === 'function') &&
