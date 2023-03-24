@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomColor: colors.black10,
     borderBottomWidth: 2,
+    height: 150,
   },
   textContainer: {
     paddingVertical: 10,

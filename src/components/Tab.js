@@ -20,7 +20,7 @@ const Tab = () => {
     initialAPI();
   }, [currentPage]);
 
-  const initialAPI = async () => {
+  const initialAPI = useCallback(async () => {
     try {
       const response = await Axios().get(`users?page=${currentPage}`);
       if (response.data?.total_pages >= currentPage) {
@@ -35,7 +35,7 @@ const Tab = () => {
       console.log(error?.response?.status);
       setIsLoading(false);
     }
-  };
+  }, [currentPage]);
 
   const loadMoreItem = () => {
     if (totalPage >= currentPage + 1) {
