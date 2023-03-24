@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {colors, deviceWidth} from '../utils';
+import FImage from './FImage';
 
 const ContactList = ({
   data,
@@ -39,11 +40,18 @@ const ContactList = ({
           styles.item,
           {borderLeftWidth: item?.isSelected === true ? 10 : 0},
         ]}>
-        <View style={styles.textContainer}>
-          <Text style={styles.itemText}>{`${item?.first_name || ''} ${
-            item?.last_name || ''
-          }`}</Text>
-          <Text style={styles.itemEmail}>{item?.email || ''}</Text>
+        <View style={styles.userDetails}>
+          <FImage
+            source={{uri: item?.avatar}}
+            style={{width: 100, height: 100}}
+            resizeMode="contain"
+          />
+          <View style={styles.textContainer}>
+            <Text style={styles.itemText}>{`${item?.first_name || ''} ${
+              item?.last_name || ''
+            }`}</Text>
+            <Text style={styles.itemEmail}>{item?.email || ''}</Text>
+          </View>
         </View>
         {item?.isSelected === true && showDelete && (
           <TouchableOpacity
@@ -52,7 +60,7 @@ const ContactList = ({
             onPress={() =>
               clickHandler({...item, isDeleted: true, isSelected: false})
             }>
-            <Text style={styles.itemText}>Delete</Text>
+            <Text style={styles.deleteText}>Delete</Text>
           </TouchableOpacity>
         )}
       </TouchableOpacity>
@@ -90,26 +98,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomColor: colors.black10,
     borderBottomWidth: 2,
-    height: 150,
   },
   textContainer: {
     paddingVertical: 10,
     paddingLeft: 10,
   },
   itemText: {
-    paddingVertical: 3,
-    fontSize: 14,
+    paddingBottom: 5,
+    fontSize: 18,
     fontWeight: '400',
     color: colors.black,
   },
   itemEmail: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: 'bold',
+    color: colors.black,
+  },
+  deleteText: {
+    fontSize: 14,
+    fontWeight: '400',
     color: colors.black,
   },
   delete: {
     backgroundColor: colors.red,
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -117,6 +129,7 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     alignItems: 'center',
   },
+  userDetails: {flexDirection: 'row'},
 });
 
 export default ContactList;
