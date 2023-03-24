@@ -11,20 +11,35 @@ const Tab = () => {
   const [data, setData] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [totalPage, setTotalPage] = useState(0);
+
   useEffect(() => {
+    setIsLoading(true);
     initialAPI();
-  }, []);
+  }, [currentPage]);
 
   const initialAPI = async () => {
     try {
-      const response = await Axios().get('users?page=1');
-      const temp = response.data.data.map(_ => {
-        return {..._, isSelected: false, isDeleted: false};
-      });
-      console.log('temp', temp);
-      setData(temp || []);
+      const response = await Axios().get(`users?page=${currentPage}`);
+      if (response.data?.total_pages >= currentPage) {
+        const temp = response.data.data.map(_ => {
+          return {..._, isSelected: false, isDeleted: false};
+        });
+        setData(previousState => [...(previousState || []), ...(temp || [])]);
+        setTotalPage(response.data?.total_pages);
+      }
+      setIsLoading(false);
     } catch (error) {
       console.log(error?.response?.status);
+      setIsLoading(false);
+    }
+  };
+
+  const loadMoreItem = () => {
+    if (totalPage >= currentPage + 1) {
+      setCurrentPage(currentPage + 1);
     }
   };
 
@@ -64,6 +79,8 @@ const Tab = () => {
         data={item}
         showDelete={showDelete}
         clickHandler={clickHandler}
+        loadMoreItem={loadMoreItem}
+        isLoading={isLoading}
       />
     );
   };

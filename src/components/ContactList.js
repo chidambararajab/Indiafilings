@@ -1,8 +1,21 @@
-import React, {useState} from 'react';
-import {View, FlatList, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React from 'react';
+import {
+  View,
+  FlatList,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import {colors, deviceWidth} from '../utils';
 
-const ContactList = ({data, showDelete, clickHandler}) => {
+const ContactList = ({
+  data,
+  showDelete,
+  clickHandler,
+  isLoading,
+  loadMoreItem,
+}) => {
   const selectHandlr = item => {
     clickHandler({
       ...item,
@@ -40,19 +53,26 @@ const ContactList = ({data, showDelete, clickHandler}) => {
     );
   };
 
+  const renderLoader = () => {
+    return isLoading ? (
+      <View style={styles.loaderStyle}>
+        <ActivityIndicator size="large" color={colors.black} />
+      </View>
+    ) : null;
+  };
+
   const keyExtractor = (item, index) => `${index}-${item.id}`;
 
   return (
     <FlatList
-      data={[...data, ...data, ...data] || []}
+      data={data || []}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       bounces={false}
       showsVerticalScrollIndicator={false}
+      ListFooterComponent={renderLoader}
+      onEndReached={loadMoreItem}
       onEndReachedThreshold={0.1}
-      onEndReached={() => {
-        alert('end');
-      }}
     />
   );
 };
@@ -85,6 +105,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  loaderStyle: {
+    marginVertical: 16,
+    alignItems: 'center',
   },
 });
 
