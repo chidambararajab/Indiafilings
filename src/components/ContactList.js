@@ -17,7 +17,6 @@ const ContactList = ({
   isLoading,
   loadMoreItem,
 }) => {
-  console.log('INSIDE');
   const selectHandler = item => {
     if (item?.isDeleted) {
       alert('Item already Deleted');
@@ -36,7 +35,12 @@ const ContactList = ({
     return (
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={() => selectHandler(item)}
+        onLongPress={() => selectHandler(item)}
+        onPress={() => {
+          if (item?.isDeleted) {
+            alert('Item already Deleted');
+          }
+        }}
         style={[
           styles.item,
           {borderLeftWidth: item?.isSelected === true ? 10 : 0},
@@ -121,7 +125,7 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   delete: {
-    backgroundColor: colors.red,
+    backgroundColor: colors.gray,
     paddingHorizontal: 30,
     alignItems: 'center',
     justifyContent: 'center',

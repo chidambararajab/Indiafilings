@@ -1,18 +1,37 @@
 import React, {Children, useCallback, useEffect, useState} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, useWindowDimensions} from 'react-native';
 
-import {colors, deviceWidth} from '../utils';
+import {colors} from '../utils';
 import ContactList from './ContactList';
-import {Axios} from '../config';
 import Message from './Message';
 import {useDispatch, useSelector} from 'react-redux';
 import {initial} from '../redux/actions/initialActions';
+import {TabView} from 'react-native-tab-view';
 
 const Tab = () => {
   const dispatch = useDispatch();
-  const _tabs = ['List', 'Selected', 'Deleted'];
   const [data, setData] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(0);
+
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    {key: 'first', title: 'List'},
+    {key: 'second', title: 'Selected'},
+    {key: 'third', title: 'Deleted'},
+  ]);
+
+  const renderScene = ({route}) => {
+    switch (route.key) {
+      case 'first':
+        return <Tab1 />;
+      case 'second':
+        return <Tab2 />;
+      case 'third':
+        return <Tab3 />;
+      default:
+        return null;
+    }
+  };
 
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -56,36 +75,52 @@ const Tab = () => {
     setData([...temp, item].sort((a, b) => a.id - b.id));
   };
 
-  const handlePress = index => {
-    setActiveIndex(index);
-  };
-
-  const filteredData = () => {
-    if (activeIndex === 0) {
-      return data.filter(_ => _?.isDeleted === false);
-    }
-    if (activeIndex === 1) {
-      return data.filter(_ => _?.isSelected === true && _?.isDeleted === false);
-    }
-    if (activeIndex === 2) {
-      return data.filter(_ => _?.isDeleted === true);
-    }
-  };
-
-  const renderTabContent = ({item, showDelete}) => {
+  const Tab1 = () => {
+    const item = data.filter(_ => _?.isDeleted === false);
     if (item.length === 0) {
-      const message =
-        activeIndex === 1
-          ? 'Select a record to see record in tab 2'
-          : activeIndex === 2
-          ? 'Delete a record to see record in tab 3'
-          : 'No Record Found';
+      const message = 'Delete a record to see record in tab 3';
       return <Message message={message} />;
     }
     return (
       <ContactList
         data={item}
-        showDelete={showDelete}
+        showDelete={index === 1}
+        clickHandler={clickHandler}
+        loadMoreItem={loadMoreItem}
+        isLoading={isLoading}
+      />
+    );
+  };
+
+  const Tab2 = () => {
+    const item = data.filter(
+      _ => _?.isSelected === true && _?.isDeleted === false,
+    );
+    if (item.length === 0) {
+      const message = 'Select a record to see record in tab 2';
+      return <Message message={message} />;
+    }
+    return (
+      <ContactList
+        data={item}
+        showDelete={index === 1}
+        clickHandler={clickHandler}
+        loadMoreItem={loadMoreItem}
+        isLoading={isLoading}
+      />
+    );
+  };
+
+  const Tab3 = () => {
+    const item = data.filter(_ => _?.isDeleted === true);
+    if (item.length === 0) {
+      const message = 'No Record Found';
+      return <Message message={message} />;
+    }
+    return (
+      <ContactList
+        data={item}
+        showDelete={index === 1}
         clickHandler={clickHandler}
         loadMoreItem={loadMoreItem}
         isLoading={isLoading}
@@ -95,25 +130,12 @@ const Tab = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.subContainer}>
-        {Children.toArray(
-          _tabs.map((_, index) => (
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => handlePress(index)}
-              style={[
-                styles.tabButton,
-                {
-                  borderBottomColor:
-                    index === activeIndex ? colors.black : colors.gray,
-                },
-              ]}>
-              <Text style={styles.tabButtonText}>{_}</Text>
-            </TouchableOpacity>
-          )),
-        )}
-      </View>
-      {renderTabContent({item: filteredData(), showDelete: activeIndex === 1})}
+      <TabView
+        navigationState={{index, routes}}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{width: layout.width}}
+      />
     </View>
   );
 };
