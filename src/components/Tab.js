@@ -58,6 +58,12 @@ const Tab = () => {
         setTotalPage(initialData.data?.total_pages);
       }
       setIsLoading(false);
+      /**
+       * NOTE: Uncomment below line if wanted to see the loader which used in infinite scroll
+       */
+      // if (currentPage === 2) {
+      //   setIsLoading(true);
+      // }
     }
     if (isLoading && !initialData?.isLoading && initialData?.isError !== null) {
       setIsLoading(false);
