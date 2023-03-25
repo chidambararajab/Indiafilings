@@ -1,7 +1,10 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, StatusBar, LogBox, SafeAreaView} from 'react-native';
+import {Provider} from 'react-redux';
+
 import {Tab} from './components';
 import {colors} from './utils';
+import store from './redux';
 
 const App = () => {
   useEffect(() => {
@@ -9,10 +12,12 @@ const App = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
-      <Tab />
-    </SafeAreaView>
+    <Provider store={store}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
+        <Tab />
+      </SafeAreaView>
+    </Provider>
   );
 };
 

@@ -5,8 +5,11 @@ import {colors, deviceWidth} from '../utils';
 import ContactList from './ContactList';
 import {Axios} from '../config';
 import Message from './Message';
+import {useDispatch, useSelector} from 'react-redux';
+import {initial} from '../redux/actions/initialActions';
 
 const Tab = () => {
+  const dispatch = useDispatch();
   const _tabs = ['List', 'Selected', 'Deleted'];
   const [data, setData] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -14,28 +17,33 @@ const Tab = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [totalPage, setTotalPage] = useState(0);
+  const initialData = useSelector(state => state.initialReducer);
 
   useEffect(() => {
-    setIsLoading(true);
     initialAPI();
+    setIsLoading(true);
   }, [currentPage]);
 
   const initialAPI = useCallback(async () => {
-    try {
-      const response = await Axios().get(`users?page=${currentPage}`);
-      if (response.data?.total_pages >= currentPage) {
-        const temp = response.data.data.map(_ => {
+    await dispatch(initial(currentPage));
+    setIsLoading(true);
+  }, [currentPage]);
+
+  useEffect(() => {
+    if (isLoading && !initialData?.isLoading && initialData?.isError === null) {
+      if (initialData.data?.total_pages >= currentPage) {
+        const temp = initialData.data.data.map(_ => {
           return {..._, isSelected: false, isDeleted: false};
         });
         setData(previousState => [...(previousState || []), ...(temp || [])]);
-        setTotalPage(response.data?.total_pages);
+        setTotalPage(initialData.data?.total_pages);
       }
       setIsLoading(false);
-    } catch (error) {
-      console.log(error?.response?.status);
+    }
+    if (isLoading && !initialData?.isLoading && initialData?.isError !== null) {
       setIsLoading(false);
     }
-  }, [currentPage]);
+  }, [initialData]);
 
   const loadMoreItem = () => {
     if (totalPage >= currentPage + 1) {

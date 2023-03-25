@@ -17,6 +17,7 @@ const ContactList = ({
   isLoading,
   loadMoreItem,
 }) => {
+  console.log('INSIDE');
   const selectHandler = item => {
     if (item?.isDeleted) {
       alert('Item already Deleted');
