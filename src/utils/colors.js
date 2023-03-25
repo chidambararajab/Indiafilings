@@ -5,4 +5,5 @@ export default {
   black30: 'rgba(0,0,0,0.3)',
   gray: '#ddd',
   red: 'red',
+  skyBlue: '#2196f3',
 };

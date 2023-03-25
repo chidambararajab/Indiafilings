@@ -14,7 +14,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <SafeAreaView style={styles.container}>
-        <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
+        <StatusBar backgroundColor={colors.skyBlue} barStyle="light-content" />
         <Tab />
       </SafeAreaView>
     </Provider>

@@ -58,7 +58,7 @@ const ContactList = ({
             <Text style={styles.itemEmail}>{item?.email || ''}</Text>
           </View>
         </View>
-        {item?.isSelected === true && showDelete && (
+        {showDelete && item?.isSelected === true && (
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.delete}
